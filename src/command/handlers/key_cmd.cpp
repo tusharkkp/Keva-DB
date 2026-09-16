@@ -70,8 +70,8 @@ static bool glob_match(std::string_view pattern, std::string_view str) {
 // --------------------------------------------------------------------------
 void handle_del(CommandContext& ctx) {
     i64 deleted = 0;
-    for (usize i = 1; i < ctx.cmd.array.size(); ++i) {
-        if (ctx.db.del(ctx.cmd.array[i].str)) ++deleted;
+    for (usize i = 1; i < ctx.cmd.elements.size(); ++i) {
+        if (ctx.db.del(ctx.cmd.elements[i].str)) ++deleted;
     }
     RespEncoder::integer(ctx.conn, deleted);
 }
@@ -81,8 +81,8 @@ void handle_del(CommandContext& ctx) {
 // --------------------------------------------------------------------------
 void handle_exists(CommandContext& ctx) {
     i64 count = 0;
-    for (usize i = 1; i < ctx.cmd.array.size(); ++i) {
-        if (ctx.db.exists(ctx.cmd.array[i].str)) ++count;
+    for (usize i = 1; i < ctx.cmd.elements.size(); ++i) {
+        if (ctx.db.exists(ctx.cmd.elements[i].str)) ++count;
     }
     RespEncoder::integer(ctx.conn, count);
 }
@@ -91,7 +91,7 @@ void handle_exists(CommandContext& ctx) {
 // handle_type — TYPE key
 // --------------------------------------------------------------------------
 void handle_type(CommandContext& ctx) {
-    const auto* obj = ctx.db.peek(ctx.cmd.array[1].str);
+    const auto* obj = ctx.db.peek(ctx.cmd.elements[1].str);
     if (!obj) { RespEncoder::simple_string(ctx.conn, "none"); return; }
 
     switch (obj->type()) {
@@ -107,10 +107,10 @@ void handle_type(CommandContext& ctx) {
 // handle_expire — EXPIRE key seconds
 // --------------------------------------------------------------------------
 void handle_expire(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     i64 seconds = 0;
-    if (auto [p, ec] = std::from_chars(ctx.cmd.array[2].str.data(),
-                                        ctx.cmd.array[2].str.data() + ctx.cmd.array[2].str.size(),
+    if (auto [p, ec] = std::from_chars(ctx.cmd.elements[2].str.data(),
+                                        ctx.cmd.elements[2].str.data() + ctx.cmd.elements[2].str.size(),
                                         seconds); ec != std::errc{}) {
         RespEncoder::error(ctx.conn, "value is not an integer or out of range"); return;
     }
@@ -123,10 +123,10 @@ void handle_expire(CommandContext& ctx) {
 // handle_pexpire — PEXPIRE key milliseconds
 // --------------------------------------------------------------------------
 void handle_pexpire(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     i64 ms = 0;
-    if (auto [p, ec] = std::from_chars(ctx.cmd.array[2].str.data(),
-                                        ctx.cmd.array[2].str.data() + ctx.cmd.array[2].str.size(),
+    if (auto [p, ec] = std::from_chars(ctx.cmd.elements[2].str.data(),
+                                        ctx.cmd.elements[2].str.data() + ctx.cmd.elements[2].str.size(),
                                         ms); ec != std::errc{}) {
         RespEncoder::error(ctx.conn, "value is not an integer or out of range"); return;
     }
@@ -139,10 +139,10 @@ void handle_pexpire(CommandContext& ctx) {
 // handle_expireat — EXPIREAT key unix-timestamp-seconds
 // --------------------------------------------------------------------------
 void handle_expireat(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     i64 ts = 0;
-    if (auto [p, ec] = std::from_chars(ctx.cmd.array[2].str.data(),
-                                        ctx.cmd.array[2].str.data() + ctx.cmd.array[2].str.size(),
+    if (auto [p, ec] = std::from_chars(ctx.cmd.elements[2].str.data(),
+                                        ctx.cmd.elements[2].str.data() + ctx.cmd.elements[2].str.size(),
                                         ts); ec != std::errc{}) {
         RespEncoder::error(ctx.conn, "value is not an integer or out of range"); return;
     }
@@ -155,7 +155,7 @@ void handle_expireat(CommandContext& ctx) {
 // handle_ttl — TTL key (returns remaining seconds, -1 if no expiry, -2 if missing)
 // --------------------------------------------------------------------------
 void handle_ttl(CommandContext& ctx) {
-    const i64 pttl_ms = ctx.db.pttl(ctx.cmd.array[1].str);
+    const i64 pttl_ms = ctx.db.pttl(ctx.cmd.elements[1].str);
     if (pttl_ms == -2) { RespEncoder::integer(ctx.conn, -2); return; }
     if (pttl_ms == -1) { RespEncoder::integer(ctx.conn, -1); return; }
     RespEncoder::integer(ctx.conn, pttl_ms / 1000);
@@ -165,14 +165,14 @@ void handle_ttl(CommandContext& ctx) {
 // handle_pttl — PTTL key (returns remaining milliseconds)
 // --------------------------------------------------------------------------
 void handle_pttl(CommandContext& ctx) {
-    RespEncoder::integer(ctx.conn, ctx.db.pttl(ctx.cmd.array[1].str));
+    RespEncoder::integer(ctx.conn, ctx.db.pttl(ctx.cmd.elements[1].str));
 }
 
 // --------------------------------------------------------------------------
 // handle_persist — PERSIST key (remove expiry)
 // --------------------------------------------------------------------------
 void handle_persist(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     if (!ctx.db.exists(key)) { RespEncoder::integer(ctx.conn, 0); return; }
     ctx.db.remove_expire(key);
     RespEncoder::integer(ctx.conn, 1);
@@ -182,7 +182,7 @@ void handle_persist(CommandContext& ctx) {
 // handle_keys — KEYS pattern (glob matching over full keyspace)
 // --------------------------------------------------------------------------
 void handle_keys(CommandContext& ctx) {
-    const std::string_view pattern = ctx.cmd.array[1].str;
+    const std::string_view pattern = ctx.cmd.elements[1].str;
     std::vector<std::string> matches;
 
     ctx.db.for_each([&](std::string_view key, core::KevaObject* /*obj*/) {
@@ -201,8 +201,8 @@ void handle_keys(CommandContext& ctx) {
 // handle_rename — RENAME key newkey
 // --------------------------------------------------------------------------
 void handle_rename(CommandContext& ctx) {
-    const std::string_view key    = ctx.cmd.array[1].str;
-    const std::string_view newkey = ctx.cmd.array[2].str;
+    const std::string_view key    = ctx.cmd.elements[1].str;
+    const std::string_view newkey = ctx.cmd.elements[2].str;
 
     core::KevaObject* obj = ctx.db.get(key);
     if (!obj) {

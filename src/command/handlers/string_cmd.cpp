@@ -42,7 +42,6 @@ using protocol::RespEncoder;
 using core::KevaObject;
 using core::ObjectType;
 using core::ObjectEncoding;
-using core::lru_clock;
 
 // --------------------------------------------------------------------------
 // register_string_commands
@@ -67,7 +66,7 @@ void register_string_commands(CommandRegistry& reg) {
 // --------------------------------------------------------------------------
 // Helper: get string view of a KevaObject (any encoding)
 // --------------------------------------------------------------------------
-static std::string get_string_value(const KevaObject* obj, char int_buf[32]) {
+[[maybe_unused]] static std::string get_string_value(const KevaObject* obj, char int_buf[32]) {
     if (obj->encoding() == ObjectEncoding::Int) {
         const i64 val = obj->integer_value();
         auto [end, ec] = std::to_chars(int_buf, int_buf + 32, val);
@@ -80,7 +79,7 @@ static std::string get_string_value(const KevaObject* obj, char int_buf[32]) {
 // handle_set — SET key value [EX seconds] [PX ms] [NX|XX]
 // --------------------------------------------------------------------------
 void handle_set(CommandContext& ctx) {
-    const auto& args = ctx.cmd.array;
+    const auto& args = ctx.cmd.elements;
     // args[0] = "SET", args[1] = key, args[2] = value
     const std::string_view key = args[1].str;
     const std::string_view val = args[2].str;
@@ -120,7 +119,7 @@ void handle_set(CommandContext& ctx) {
     if (nx && key_exists)  { RespEncoder::nil(ctx.conn);  return; }
     if (xx && !key_exists) { RespEncoder::nil(ctx.conn);  return; }
 
-    auto* obj = KevaObject::create_string(val, lru_clock::current());
+    auto* obj = KevaObject::create_string(val, core::lru_clock::current());
     ctx.db.set(key, obj);
 
     if (expire_ms > 0) {
@@ -134,7 +133,7 @@ void handle_set(CommandContext& ctx) {
 // handle_get — GET key
 // --------------------------------------------------------------------------
 void handle_get(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     KevaObject* obj = ctx.db.get(key);
 
     if (!obj) {
@@ -161,8 +160,8 @@ void handle_get(CommandContext& ctx) {
 // handle_getset — GETSET key value (atomic get-then-set)
 // --------------------------------------------------------------------------
 void handle_getset(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
-    const std::string_view val = ctx.cmd.array[2].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
+    const std::string_view val = ctx.cmd.elements[2].str;
 
     KevaObject* old = ctx.db.get(key);
 
@@ -185,7 +184,7 @@ void handle_getset(CommandContext& ctx) {
     }
 
     // Set the new value
-    auto* new_obj = KevaObject::create_string(val, lru_clock::current());
+    auto* new_obj = KevaObject::create_string(val, core::lru_clock::current());
     ctx.db.set(key, new_obj);
 }
 
@@ -193,13 +192,13 @@ void handle_getset(CommandContext& ctx) {
 // handle_mset — MSET key1 val1 key2 val2 ...
 // --------------------------------------------------------------------------
 void handle_mset(CommandContext& ctx) {
-    const auto& args = ctx.cmd.array;
+    const auto& args = ctx.cmd.elements;
     if (args.size() % 2 != 1) {
         RespEncoder::error(ctx.conn, "wrong number of arguments for MSET");
         return;
     }
     for (usize i = 1; i < args.size(); i += 2) {
-        auto* obj = KevaObject::create_string(args[i+1].str, lru_clock::current());
+        auto* obj = KevaObject::create_string(args[i+1].str, core::lru_clock::current());
         ctx.db.set(args[i].str, obj);
     }
     RespEncoder::ok(ctx.conn);
@@ -209,7 +208,7 @@ void handle_mset(CommandContext& ctx) {
 // handle_mget — MGET key1 key2 ...
 // --------------------------------------------------------------------------
 void handle_mget(CommandContext& ctx) {
-    const auto& args = ctx.cmd.array;
+    const auto& args = ctx.cmd.elements;
     RespEncoder::array_header(ctx.conn, static_cast<i64>(args.size() - 1));
 
     for (usize i = 1; i < args.size(); ++i) {
@@ -231,8 +230,8 @@ void handle_mget(CommandContext& ctx) {
 // handle_append — APPEND key value
 // --------------------------------------------------------------------------
 void handle_append(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
-    const std::string_view val = ctx.cmd.array[2].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
+    const std::string_view val = ctx.cmd.elements[2].str;
 
     KevaObject* obj = ctx.db.get(key);
     if (obj && obj->type() != ObjectType::String) {
@@ -243,7 +242,7 @@ void handle_append(CommandContext& ctx) {
 
     if (!obj) {
         // Key does not exist: create a new string
-        auto* new_obj = KevaObject::create_string(val, lru_clock::current());
+        auto* new_obj = KevaObject::create_string(val, core::lru_clock::current());
         ctx.db.set(key, new_obj);
         RespEncoder::integer(ctx.conn, static_cast<i64>(val.size()));
         return;
@@ -261,7 +260,7 @@ void handle_append(CommandContext& ctx) {
     }
     current.append(val);
 
-    auto* new_obj = KevaObject::create_string(current, lru_clock::current());
+    auto* new_obj = KevaObject::create_string(current, core::lru_clock::current());
     ctx.db.set(key, new_obj);
     RespEncoder::integer(ctx.conn, static_cast<i64>(current.size()));
 }
@@ -270,7 +269,7 @@ void handle_append(CommandContext& ctx) {
 // handle_strlen — STRLEN key
 // --------------------------------------------------------------------------
 void handle_strlen(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     KevaObject* obj = ctx.db.get(key);
 
     if (!obj) { RespEncoder::integer(ctx.conn, 0); return; }
@@ -307,7 +306,7 @@ static bool get_integer_obj(KevaObject* obj, i64& out) {
 // handle_incr — INCR key
 // --------------------------------------------------------------------------
 void handle_incr(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     KevaObject* obj = ctx.db.get(key);
 
     i64 current = 0;
@@ -321,7 +320,7 @@ void handle_incr(CommandContext& ctx) {
     }
 
     const i64 new_val = current + 1;
-    auto* new_obj = KevaObject::create_string_from_int(new_val, lru_clock::current());
+    auto* new_obj = KevaObject::create_string_from_int(new_val, core::lru_clock::current());
     ctx.db.set(key, new_obj);
     RespEncoder::integer(ctx.conn, new_val);
 }
@@ -330,10 +329,10 @@ void handle_incr(CommandContext& ctx) {
 // handle_incrby — INCRBY key increment
 // --------------------------------------------------------------------------
 void handle_incrby(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     i64 increment = 0;
-    if (auto [p, ec] = std::from_chars(ctx.cmd.array[2].str.data(),
-                                        ctx.cmd.array[2].str.data() + ctx.cmd.array[2].str.size(),
+    if (auto [p, ec] = std::from_chars(ctx.cmd.elements[2].str.data(),
+                                        ctx.cmd.elements[2].str.data() + ctx.cmd.elements[2].str.size(),
                                         increment); ec != std::errc{}) {
         RespEncoder::error(ctx.conn, "value is not an integer or out of range");
         return;
@@ -354,7 +353,7 @@ void handle_incrby(CommandContext& ctx) {
     }
 
     const i64 new_val = current + increment;
-    ctx.db.set(key, KevaObject::create_string_from_int(new_val, lru_clock::current()));
+    ctx.db.set(key, KevaObject::create_string_from_int(new_val, core::lru_clock::current()));
     RespEncoder::integer(ctx.conn, new_val);
 }
 
@@ -362,7 +361,7 @@ void handle_incrby(CommandContext& ctx) {
 // handle_decr — DECR key
 // --------------------------------------------------------------------------
 void handle_decr(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     KevaObject* obj = ctx.db.get(key);
     i64 current = 0;
     if (!get_integer_obj(obj, current)) {
@@ -374,7 +373,7 @@ void handle_decr(CommandContext& ctx) {
         return;
     }
     const i64 new_val = current - 1;
-    ctx.db.set(key, KevaObject::create_string_from_int(new_val, lru_clock::current()));
+    ctx.db.set(key, KevaObject::create_string_from_int(new_val, core::lru_clock::current()));
     RespEncoder::integer(ctx.conn, new_val);
 }
 
@@ -382,10 +381,10 @@ void handle_decr(CommandContext& ctx) {
 // handle_decrby — DECRBY key decrement
 // --------------------------------------------------------------------------
 void handle_decrby(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     i64 decrement = 0;
-    if (auto [p, ec] = std::from_chars(ctx.cmd.array[2].str.data(),
-                                        ctx.cmd.array[2].str.data() + ctx.cmd.array[2].str.size(),
+    if (auto [p, ec] = std::from_chars(ctx.cmd.elements[2].str.data(),
+                                        ctx.cmd.elements[2].str.data() + ctx.cmd.elements[2].str.size(),
                                         decrement); ec != std::errc{}) {
         RespEncoder::error(ctx.conn, "value is not an integer or out of range");
         return;
@@ -399,7 +398,7 @@ void handle_decrby(CommandContext& ctx) {
     }
 
     const i64 new_val = current - decrement;
-    ctx.db.set(key, KevaObject::create_string_from_int(new_val, lru_clock::current()));
+    ctx.db.set(key, KevaObject::create_string_from_int(new_val, core::lru_clock::current()));
     RespEncoder::integer(ctx.conn, new_val);
 }
 
@@ -407,9 +406,9 @@ void handle_decrby(CommandContext& ctx) {
 // handle_setex — SETEX key seconds value
 // --------------------------------------------------------------------------
 void handle_setex(CommandContext& ctx) {
-    const std::string_view key  = ctx.cmd.array[1].str;
-    const std::string_view secs = ctx.cmd.array[2].str;
-    const std::string_view val  = ctx.cmd.array[3].str;
+    const std::string_view key  = ctx.cmd.elements[1].str;
+    const std::string_view secs = ctx.cmd.elements[2].str;
+    const std::string_view val  = ctx.cmd.elements[3].str;
 
     i64 seconds = 0;
     if (auto [p, ec] = std::from_chars(secs.data(), secs.data() + secs.size(), seconds);
@@ -418,7 +417,7 @@ void handle_setex(CommandContext& ctx) {
         return;
     }
 
-    auto* obj = KevaObject::create_string(val, lru_clock::current());
+    auto* obj = KevaObject::create_string(val, core::lru_clock::current());
     ctx.db.set(key, obj);
     ctx.db.set_expire(key, core::now_milliseconds() + seconds * 1000);
     RespEncoder::ok(ctx.conn);
@@ -428,16 +427,16 @@ void handle_setex(CommandContext& ctx) {
 // handle_psetex — PSETEX key milliseconds value
 // --------------------------------------------------------------------------
 void handle_psetex(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
     i64 ms = 0;
-    if (auto [p, ec] = std::from_chars(ctx.cmd.array[2].str.data(),
-                                        ctx.cmd.array[2].str.data() + ctx.cmd.array[2].str.size(),
+    if (auto [p, ec] = std::from_chars(ctx.cmd.elements[2].str.data(),
+                                        ctx.cmd.elements[2].str.data() + ctx.cmd.elements[2].str.size(),
                                         ms); ec != std::errc{} || ms <= 0) {
         RespEncoder::error(ctx.conn, "invalid expire time in 'psetex' command");
         return;
     }
 
-    auto* obj = KevaObject::create_string(ctx.cmd.array[3].str, lru_clock::current());
+    auto* obj = KevaObject::create_string(ctx.cmd.elements[3].str, core::lru_clock::current());
     ctx.db.set(key, obj);
     ctx.db.set_expire(key, core::now_milliseconds() + ms);
     RespEncoder::ok(ctx.conn);
@@ -447,15 +446,15 @@ void handle_psetex(CommandContext& ctx) {
 // handle_setnx — SETNX key value (set if not exists)
 // --------------------------------------------------------------------------
 void handle_setnx(CommandContext& ctx) {
-    const std::string_view key = ctx.cmd.array[1].str;
-    const std::string_view val = ctx.cmd.array[2].str;
+    const std::string_view key = ctx.cmd.elements[1].str;
+    const std::string_view val = ctx.cmd.elements[2].str;
 
     if (ctx.db.exists(key)) {
         RespEncoder::integer(ctx.conn, 0);
         return;
     }
 
-    auto* obj = KevaObject::create_string(val, lru_clock::current());
+    auto* obj = KevaObject::create_string(val, core::lru_clock::current());
     ctx.db.set(key, obj);
     RespEncoder::integer(ctx.conn, 1);
 }

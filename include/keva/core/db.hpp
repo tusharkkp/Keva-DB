@@ -58,7 +58,7 @@ public:
     [[nodiscard]] KevaObject* get(std::string_view key);
 
     // Look up a key without touching its LRU clock (for EXISTS, TYPE commands)
-    [[nodiscard]] KevaObject* peek(std::string_view key) const;
+    [[nodiscard]] KevaObject* peek(std::string_view key);
 
     // Insert or replace a key with a new KevaObject.
     // If an existing key had an expiry, it is cleared.

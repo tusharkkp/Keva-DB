@@ -131,6 +131,9 @@ public:
     [[nodiscard]] usize size() const noexcept { return ht_[0].used + ht_[1].used; }
     [[nodiscard]] bool  empty() const noexcept { return size() == 0; }
 
+    // Remove all entries (invokes value_deleter_ on each), reset to initial state
+    void clear();
+
     // Load factor of the primary table (used / buckets)
     [[nodiscard]] float load_factor() const noexcept;
 

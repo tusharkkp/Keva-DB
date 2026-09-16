@@ -60,7 +60,7 @@ public:
     // --------------------------------------------------------------------------
     // Named constructors for ergonomic call sites
     // --------------------------------------------------------------------------
-    static Status ok()                              { return Status{}; }
+    static Status success()                         { return Status{}; }
     static Status err(std::string_view msg)         { return Status{StatusCode::Err, msg}; }
     static Status io_error(std::string_view msg)    { return Status{StatusCode::IOError, msg}; }
     static Status proto_error(std::string_view msg) { return Status{StatusCode::ProtocolError, msg}; }

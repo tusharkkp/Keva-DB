@@ -89,7 +89,7 @@ KevaObject* KevaDatabase::get(std::string_view key) {
 // --------------------------------------------------------------------------
 // peek — look up without touching LRU (for EXISTS, TYPE, TTL commands)
 // --------------------------------------------------------------------------
-KevaObject* KevaDatabase::peek(std::string_view key) const {
+KevaObject* KevaDatabase::peek(std::string_view key) {
     auto* obj = static_cast<KevaObject*>(keys_.get(key));
     if (!obj) return nullptr;
     // Still check expiry for correctness
@@ -174,14 +174,18 @@ usize KevaDatabase::active_expire_cycle() {
         if (n == 0) break;
 
         usize deleted_this_round = 0;
+        std::vector<std::string> expired_keys;
         for (auto* entry : sampled) {
-            const std::string_view key = entry->key.view();
             const auto* ts_ptr = static_cast<const i64*>(entry->value);
             if (ts_ptr && now >= *ts_ptr) {
-                delete_key(key);
-                ++deleted_this_round;
-                ++total_deleted;
+                expired_keys.emplace_back(entry->key.view());
             }
+        }
+
+        for (const auto& key : expired_keys) {
+            delete_key(key);
+            ++deleted_this_round;
+            ++total_deleted;
         }
 
         // If less than 25% were expired, stop (not worth continuing)
@@ -198,7 +202,7 @@ Status KevaDatabase::evict_if_needed(usize /*maxmemory*/) {
     // Phase 1 stub: memory tracking and eviction will be fully wired in Phase 4
     // when we implement the ServerContext with used_memory tracking.
     // For now, we always return ok() (no eviction triggered).
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -228,8 +232,8 @@ void KevaDatabase::for_each(const std::function<void(std::string_view, KevaObjec
 // --------------------------------------------------------------------------
 void KevaDatabase::flush() {
     // Reconstruct both dicts (cheapest way to release all entries at once)
-    keys_   = Dict{[](void* ptr) { KevaObject::destroy(static_cast<KevaObject*>(ptr)); }};
-    expires_= Dict{[](void* ptr) { delete static_cast<i64*>(ptr); }};
+    keys_.clear();
+    expires_.clear();
     log::info("DB %d flushed", db_id_);
 }
 

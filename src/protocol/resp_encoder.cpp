@@ -120,7 +120,7 @@ void RespEncoder::encode(net::Connection& conn, const RespValue& value) {
             error(conn, value.str);
             break;
         case RespType::Integer:
-            integer(conn, value.integer);
+            integer(conn, value.int_val);
             break;
         case RespType::BulkString:
             bulk_string(conn, value.str);
@@ -129,8 +129,8 @@ void RespEncoder::encode(net::Connection& conn, const RespValue& value) {
             nil(conn);
             break;
         case RespType::Array:
-            array_header(conn, static_cast<i64>(value.array.size()));
-            for (const auto& elem : value.array) {
+            array_header(conn, static_cast<i64>(value.elements.size()));
+            for (const auto& elem : value.elements) {
                 encode(conn, elem);
             }
             break;

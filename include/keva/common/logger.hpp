@@ -55,13 +55,13 @@ public:
     void warn (const char* fmt, ...) const;
     void error(const char* fmt, ...) const;
 
+    // Internal write: formats the message, prepends timestamp + level tag,
+    // and writes atomically to stdout.
+    // Public so that keva::log:: free functions can call it directly.
+    void write(LogLevel lvl, const char* fmt, std::va_list args) const;
+
 private:
     Logger() = default;
-
-    // Internal write: formats the message, prepends timestamp + level tag,
-    // and writes atomically to stdout
-    void write(LogLevel level, const char* fmt, std::va_list args) const;
-
     LogLevel level_ = LogLevel::Info;
 };
 

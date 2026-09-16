@@ -72,7 +72,7 @@ Status RdbReader::read_bytes(void* out, usize len) {
         remaining -= static_cast<usize>(n);
         bytes_read_ += static_cast<usize>(n);
     }
-    return Status::ok();
+    return Status::success();
 }
 
 Status RdbReader::read_u8(u8& out)   { return read_bytes(&out, 1); }
@@ -111,7 +111,7 @@ Status RdbReader::verify_crc64() {
     if (stored_crc != crc_state_) {
         return Status::io_error("RDB CRC64 checksum mismatch — file may be corrupt");
     }
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -197,7 +197,7 @@ Status rdb_load(core::KevaDatabase& db, std::string_view filename) {
 
     ::close(fd);
     log::info("RDB: loaded %zu keys from snapshot", keys_loaded);
-    return Status::ok();
+    return Status::success();
 }
 
 } // namespace keva::persistence

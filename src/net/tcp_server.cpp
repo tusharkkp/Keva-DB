@@ -73,7 +73,7 @@ Status TcpServer::start() {
     }
 
     log::info("Keva listening on %s:%d", host_.c_str(), port_);
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------

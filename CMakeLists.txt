@@ -88,4 +88,5 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # Sub-Trees
 # --------------------------------------------------------------------------
 add_subdirectory(src)
+enable_testing()          # Must be in root CMakeLists for CTest to discover tests
 add_subdirectory(tests)

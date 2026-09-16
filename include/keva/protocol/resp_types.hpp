@@ -56,10 +56,10 @@ struct RespValue {
     std::string str;
 
     // Payload for Integer
-    i64 integer = 0;
+    i64 int_val = 0;
 
     // Payload for Array (recursive: each element is a RespValue)
-    std::vector<RespValue> array;
+    std::vector<RespValue> elements;
 
     // --------------------------------------------------------------------------
     // Factories for constructing RespValue objects ergonomically
@@ -81,7 +81,7 @@ struct RespValue {
     static RespValue integer(i64 n) {
         RespValue v;
         v.type    = RespType::Integer;
-        v.integer = n;
+        v.int_val = n;
         return v;
     }
 
@@ -98,10 +98,10 @@ struct RespValue {
         return v;
     }
 
-    static RespValue array(std::vector<RespValue> elements) {
+    static RespValue array(std::vector<RespValue> elems) {
         RespValue v;
         v.type  = RespType::Array;
-        v.array = std::move(elements);
+        v.elements = std::move(elems);
         return v;
     }
 

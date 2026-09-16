@@ -101,13 +101,13 @@ void CommandRegistry::dispatch(net::Connection& conn, core::KevaDatabase& db) {
         conn.consume(consumed);
 
         // Validate: must be an Array
-        if (!cmd_value.is_array() || cmd_value.array.empty()) {
+        if (!cmd_value.is_array() || cmd_value.elements.empty()) {
             RespEncoder::error(conn, "Protocol error: expected array");
             continue;
         }
 
         // Extract command name (first element must be a Bulk String)
-        const auto& name_value = cmd_value.array[0];
+        const auto& name_value = cmd_value.elements[0];
         if (!name_value.is_bulk_string()) {
             RespEncoder::error(conn, "Protocol error: command name must be bulk string");
             continue;
@@ -127,8 +127,8 @@ void CommandRegistry::dispatch(net::Connection& conn, core::KevaDatabase& db) {
             continue;
         }
 
-        // Arity check: cmd_value.array includes the command name itself
-        const int argc = static_cast<int>(cmd_value.array.size());
+        // Arity check: cmd_value.elements includes the command name itself
+        const int argc = static_cast<int>(cmd_value.elements.size());
         if (argc < entry->arity_min ||
             (entry->arity_max != -1 && argc > entry->arity_max)) {
             RespEncoder::error(conn,

@@ -1,0 +1,27 @@
+# Build artifacts and build directory
+build/
+bin/
+lib/
+*.o
+*.a
+*.so
+*.dylib
+*.out
+
+# Persistence snapshot files
+*.rdb
+*.rdb.tmp
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE and OS metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~
+compile_commands.json

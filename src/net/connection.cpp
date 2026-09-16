@@ -125,7 +125,7 @@ Status Connection::flush_write_buffer() {
         write_pos_ = 0;
     }
 
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------

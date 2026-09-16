@@ -127,7 +127,7 @@ std::pair<Socket, Status> Socket::create_server(std::string_view host, u16 port)
         return {Socket{}, Status::io_error(strerror(errno))};
     }
 
-    return {std::move(sock), Status::ok()};
+    return {std::move(sock), Status::success()};
 }
 
 // --------------------------------------------------------------------------
@@ -143,7 +143,7 @@ Status Socket::set_nonblocking() noexcept {
     if (::fcntl(fd_, F_SETFL, flags | O_NONBLOCK) < 0) {
         return Status::io_error(strerror(errno));
     }
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -154,7 +154,7 @@ Status Socket::set_nodelay() noexcept {
     if (::setsockopt(fd_, IPPROTO_TCP, TCP_NODELAY, &opt, sizeof(opt)) < 0) {
         return Status::io_error(strerror(errno));
     }
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------

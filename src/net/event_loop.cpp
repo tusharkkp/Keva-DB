@@ -84,7 +84,7 @@ Status EventLoop::epoll_ctl_op(int op, int fd, u32 events) {
     if (::epoll_ctl(epoll_fd_, op, fd, &ev) < 0) {
         return Status::io_error(strerror(errno));
     }
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -98,14 +98,12 @@ Status EventLoop::add_readable(int fd, IoCallback callback) {
     u32 events = EPOLLIN;
     if (h.on_writable) events |= EPOLLOUT;
 
-    int op = (h.on_readable && h.on_writable) ? EPOLL_CTL_MOD : EPOLL_CTL_ADD;
-    // If this is the first registration, use ADD; otherwise MOD
-    // (A simpler way: always try ADD, on EEXIST retry with MOD)
+    // Try ADD first; if fd is already registered, fall back to MOD
     if (auto s = epoll_ctl_op(EPOLL_CTL_ADD, fd, events); !s.ok()) {
         // fd might already be registered (e.g., adding EPOLLIN after EPOLLOUT)
         return epoll_ctl_op(EPOLL_CTL_MOD, fd, events);
     }
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -121,7 +119,7 @@ Status EventLoop::add_writable(int fd, IoCallback callback) {
     if (auto s = epoll_ctl_op(EPOLL_CTL_ADD, fd, events); !s.ok()) {
         return epoll_ctl_op(EPOLL_CTL_MOD, fd, events);
     }
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -129,7 +127,7 @@ Status EventLoop::add_writable(int fd, IoCallback callback) {
 // --------------------------------------------------------------------------
 Status EventLoop::remove_writable(int fd) {
     auto it = handlers_.find(fd);
-    if (it == handlers_.end()) return Status::ok();
+    if (it == handlers_.end()) return Status::success();
 
     it->second.on_writable = nullptr;
 
@@ -153,7 +151,7 @@ Status EventLoop::remove(int fd) {
             return Status::io_error(strerror(errno));
         }
     }
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------

@@ -12,6 +12,7 @@
 #include "keva/protocol/resp_types.hpp"
 
 using namespace keva::protocol;
+using keva::usize;
 
 // Helper: parse a complete string, expect Complete result
 static RespValue parse_complete(std::string_view input) {
@@ -39,7 +40,7 @@ TEST_CASE("RespParser: error -ERR message\\r\\n", "[resp]") {
 TEST_CASE("RespParser: integer :1000\\r\\n", "[resp]") {
     auto v = parse_complete(":1000\r\n");
     REQUIRE(v.is_integer());
-    REQUIRE(v.integer == 1000);
+    REQUIRE(v.int_val == 1000);
 }
 
 TEST_CASE("RespParser: bulk string $5\\r\\nhello\\r\\n", "[resp]") {
@@ -56,9 +57,9 @@ TEST_CASE("RespParser: nil bulk string $-1\\r\\n", "[resp]") {
 TEST_CASE("RespParser: array *2\\r\\n$3\\r\\nGET\\r\\n$3\\r\\nkey\\r\\n", "[resp]") {
     auto v = parse_complete("*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n");
     REQUIRE(v.is_array());
-    REQUIRE(v.array.size() == 2);
-    REQUIRE(v.array[0].str == "GET");
-    REQUIRE(v.array[1].str == "key");
+    REQUIRE(v.elements.size() == 2);
+    REQUIRE(v.elements[0].str == "GET");
+    REQUIRE(v.elements[1].str == "key");
 }
 
 TEST_CASE("RespParser: incomplete input returns Incomplete", "[resp]") {
@@ -83,8 +84,8 @@ TEST_CASE("RespParser: invalid prefix byte returns Error", "[resp]") {
 TEST_CASE("RespParser: nested array SET key value", "[resp]") {
     auto v = parse_complete("*3\r\n$3\r\nSET\r\n$4\r\nname\r\n$5\r\nAlice\r\n");
     REQUIRE(v.is_array());
-    REQUIRE(v.array.size() == 3);
-    REQUIRE(v.array[0].str == "SET");
-    REQUIRE(v.array[1].str == "name");
-    REQUIRE(v.array[2].str == "Alice");
+    REQUIRE(v.elements.size() == 3);
+    REQUIRE(v.elements[0].str == "SET");
+    REQUIRE(v.elements[1].str == "name");
+    REQUIRE(v.elements[2].str == "Alice");
 }

@@ -154,6 +154,31 @@ Dict::~Dict() {
 }
 
 // --------------------------------------------------------------------------
+// clear — destroy all entries and reset to initial empty state
+// --------------------------------------------------------------------------
+void Dict::clear() {
+    // Free all entries in both tables (same logic as destructor)
+    for (int t = 0; t < 2; ++t) {
+        if (ht_[t].null()) continue;
+        for (usize i = 0; i < ht_[t].size; ++i) {
+            DictEntry* entry = ht_[t].buckets[i];
+            while (entry) {
+                DictEntry* next = entry->next;
+                if (value_deleter_ && entry->value) {
+                    value_deleter_(entry->value);
+                }
+                delete entry;
+                entry = next;
+            }
+        }
+        ht_[t].deallocate();
+    }
+    // Reinitialize with a small bucket array
+    ht_[0].allocate(4);
+    rehashidx_ = -1;
+}
+
+// --------------------------------------------------------------------------
 // seed_hash — set the SipHash secret key
 // --------------------------------------------------------------------------
 void Dict::seed_hash(u64 k0, u64 k1) noexcept {
@@ -209,7 +234,7 @@ void Dict::maybe_shrink() {
 
     const float lf = load_factor();
     if (lf < constants::DICT_SHRINK_RATIO) {
-        const usize new_size = std::bit_ceil(ht_[0].used < 4 ? 4UZ : ht_[0].used);
+        const usize new_size = std::bit_ceil(ht_[0].used < usize{4} ? usize{4} : ht_[0].used);
         ht_[1].allocate(new_size);
         rehashidx_ = 0;
         log::debug("Dict shrinking: size=%zu -> %zu (load=%.2f)",
@@ -413,33 +438,31 @@ void Dict::for_each(const std::function<void(std::string_view, void*)>& visitor)
 // --------------------------------------------------------------------------
 usize Dict::random_sample(usize count, std::vector<DictEntry*>& out) {
     if (size() == 0) return 0;
+    if (count > size()) count = size();
 
-    // Use a simple LCG random to pick random bucket positions
     static thread_local std::mt19937_64 rng{std::random_device{}()};
 
-    usize found = 0;
-    usize attempts = 0;
-    const usize max_attempts = count * 20;
+    int t = 0;
+    if (is_rehashing() && (rng() % 3 == 0) && !ht_[1].null() && ht_[1].used > 0) {
+        t = 1;
+    }
+    if (ht_[t].null() || ht_[t].used == 0) t = 0;
+    if (ht_[t].null() || ht_[t].used == 0) return 0;
 
-    while (found < count && attempts < max_attempts) {
-        ++attempts;
-        // Pick a random table to sample from (prefer ht_[0] by 2:1)
-        int t = 0;
-        if (is_rehashing() && (rng() % 3 == 0)) t = 1;
-        if (ht_[t].null() || ht_[t].used == 0) continue;
+    usize idx = rng() & ht_[t].sizemask;
+    usize buckets_checked = 0;
+    const usize max_buckets = ht_[t].size;
 
-        const usize idx = rng() % ht_[t].size;
+    while (out.size() < count && buckets_checked < max_buckets) {
         DictEntry* entry = ht_[t].buckets[idx];
-        if (!entry) continue;
-
-        // Walk the chain and collect entries
-        while (entry && found < count) {
+        while (entry && out.size() < count) {
             out.push_back(entry);
-            ++found;
             entry = entry->next;
         }
+        idx = (idx + 1) & ht_[t].sizemask;
+        buckets_checked++;
     }
-    return found;
+    return out.size();
 }
 
 } // namespace keva::core

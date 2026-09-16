@@ -207,7 +207,7 @@ ParseResult RespParser::parse_value(std::string_view input, RespValue& out, usiz
 ParseResult RespParser::parse(std::string_view input, RespValue& out_value, usize& out_consumed) {
     usize pos = 0;
     const ParseResult result = parse_value(input, out_value, pos);
-    out_consumed = pos;
+    out_consumed = (result == ParseResult::Complete) ? pos : 0;
     return result;
 }
 

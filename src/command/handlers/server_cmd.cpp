@@ -29,6 +29,7 @@
 
 #include <sstream>
 #include <ctime>
+#include <charconv>
 
 namespace keva::command::handlers {
 
@@ -52,11 +53,11 @@ void register_server_commands(CommandRegistry& reg) {
 // handle_ping — PING [message]
 // --------------------------------------------------------------------------
 void handle_ping(CommandContext& ctx) {
-    if (ctx.cmd.array.size() == 1) {
+    if (ctx.cmd.elements.size() == 1) {
         RespEncoder::simple_string(ctx.conn, "PONG");
     } else {
         // PING with message echoes the message as a bulk string
-        RespEncoder::bulk_string(ctx.conn, ctx.cmd.array[1].str);
+        RespEncoder::bulk_string(ctx.conn, ctx.cmd.elements[1].str);
     }
 }
 
@@ -64,7 +65,7 @@ void handle_ping(CommandContext& ctx) {
 // handle_echo — ECHO message
 // --------------------------------------------------------------------------
 void handle_echo(CommandContext& ctx) {
-    RespEncoder::bulk_string(ctx.conn, ctx.cmd.array[1].str);
+    RespEncoder::bulk_string(ctx.conn, ctx.cmd.elements[1].str);
 }
 
 // --------------------------------------------------------------------------
@@ -175,8 +176,8 @@ void handle_bgsave(CommandContext& ctx) {
 // --------------------------------------------------------------------------
 void handle_select(CommandContext& ctx) {
     i64 idx = 0;
-    if (auto [p, ec] = std::from_chars(ctx.cmd.array[1].str.data(),
-                                        ctx.cmd.array[1].str.data() + ctx.cmd.array[1].str.size(),
+    if (auto [p, ec] = std::from_chars(ctx.cmd.elements[1].str.data(),
+                                        ctx.cmd.elements[1].str.data() + ctx.cmd.elements[1].str.size(),
                                         idx); ec != std::errc{} || idx != 0) {
         RespEncoder::error(ctx.conn, "ERR DB index is out of range");
         return;

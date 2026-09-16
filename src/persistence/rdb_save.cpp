@@ -48,6 +48,7 @@
 #include <sys/wait.h>   // waitpid(), WIFEXITED, WEXITSTATUS
 #include <cerrno>
 #include <cstring>
+#include <charconv>
 #include <ctime>
 #include <string>
 
@@ -103,7 +104,7 @@ void RdbWriter::update_crc(const void* data, usize len) {
 }
 
 Status RdbWriter::write_bytes(const void* data, usize len) {
-    if (len == 0) return Status::ok();
+    if (len == 0) return Status::success();
     const char* p = static_cast<const char*>(data);
     usize remaining = len;
     while (remaining > 0) {
@@ -117,7 +118,7 @@ Status RdbWriter::write_bytes(const void* data, usize len) {
         remaining -= static_cast<usize>(n);
         bytes_written_ += static_cast<usize>(n);
     }
-    return Status::ok();
+    return Status::success();
 }
 
 Status RdbWriter::write_u8(u8 v)   { return write_bytes(&v, 1); }
@@ -149,7 +150,7 @@ Status RdbWriter::write_crc64() {
     u64 crc = crc_state_;
     ssize_t n = ::write(fd_, &crc, 8);
     if (n != 8) return Status::io_error("Failed to write CRC64");
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -160,7 +161,7 @@ static Status save_database_to_writer(RdbWriter& w, core::KevaDatabase& db) {
     if (auto s = w.write_u8(RDB_OPCODE_DB); !s.ok()) return s;
     if (auto s = w.write_u32(static_cast<u32>(db.db_id())); !s.ok()) return s;
 
-    Status result = Status::ok();
+    Status result = Status::success();
 
     db.for_each([&](std::string_view key, core::KevaObject* obj) {
         if (!result.ok()) return;  // Short-circuit on error
@@ -192,7 +193,7 @@ static Status save_database_to_writer(RdbWriter& w, core::KevaDatabase& db) {
             char buf[32];
             const i64 val = obj->integer_value();
             auto [end, ec] = std::to_chars(buf, buf + sizeof(buf), val);
-            result = w.write_string(std::string_view{buf, static_cast<usize>(end - buf)});
+            result = w.write_string(std::string_view(buf, static_cast<usize>(end - buf)));
         } else {
             result = w.write_string(obj->string_view());
         }
@@ -248,7 +249,7 @@ Status rdb_save_sync(core::KevaDatabase& db, std::string_view filename) {
 
     log::info("RDB: saved %zu keys to %.*s",
               db.dbsize(), static_cast<int>(filename.size()), filename.data());
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------
@@ -284,7 +285,7 @@ Status rdb_save_background(core::KevaDatabase& db,
     // The parent continues serving requests immediately.
     out_child_pid = pid;
     log::info("BGSAVE: child process spawned (pid=%d)", pid);
-    return Status::ok();
+    return Status::success();
 }
 
 // --------------------------------------------------------------------------

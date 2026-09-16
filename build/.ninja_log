@@ -1,0 +1,9 @@
+# ninja log v5
+1244	4480	1789479934073481500	_deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_analyse.cpp.o	47aa8be8edae0ba
+1073	5208	1789479791974248600	tests/CMakeFiles/keva_test_dict.dir/unit/test_dict.cpp.o	41e0eb7e014a0a
+1084	5039	1789479791792989600	tests/CMakeFiles/keva_test_buffer.dir/unit/test_buffer.cpp.o	4974b4cb69865247
+956	2352	1789479459697185400	src/CMakeFiles/keva_core.dir/core/buffer.cpp.o	eaafdf2ca10e4392
+964	3536	1789479461008900700	src/CMakeFiles/keva_core.dir/core/dict.cpp.o	47becc647a81b2ed
+961	2581	1789479459963998400	src/CMakeFiles/keva_core.dir/core/object.cpp.o	b633898e405518f2
+1345	4042	1789479886456941700	_deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/catch_chronometer.cpp.o	7ab7efe930ba8f37
+3040	5850	1789548652262171900	_deps/catch2-build/src/CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_benchmark_function.cpp.o	dc35407bc67d2536

@@ -1,0 +1,602 @@
+tushar_kaldate@YOGA:~$ cd /mnt/c/PROJECTS/Keva
+cmake -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja
+cmake --build build --parallel
+-- =======================================================
+--  Keva Build Configuration
+--  Build type : Debug
+--  C++ Standard: C++20
+-- =======================================================
+--  Sanitizers : AddressSanitizer + UBSan ENABLED
+-- Configuring done (5.0s)
+-- Generating done (2.6s)
+-- Build files have been written to: /mnt/c/PROJECTS/Keva/build
+[1/129] Building CXX object src/CMakeFiles/keva_core.dir/common/logger.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/common/logger.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/common/logger.cpp.o -MF src/CMakeFiles/keva_core.dir/common/logger.cpp.o.d -o src/CMakeFiles/keva_core.dir/common/logger.cpp.o -c /mnt/c/PROJECTS/Keva/src/common/logger.cpp
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp: In function ‘void keva::log::debug(const char*, ...)’:
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:148:33: error: ‘void keva::Logger::write(keva::LogLevel, const char*, __va_list_tag*) const’ is private within this context
+  148 |         Logger::instance().write(LogLevel::Debug, fmt, args);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:110:6: note: declared private here
+  110 | void Logger::write(LogLevel lvl, const char* fmt, std::va_list args) const {
+      |      ^~~~~~
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp: In function ‘void keva::log::info(const char*, ...)’:
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:156:33: error: ‘void keva::Logger::write(keva::LogLevel, const char*, __va_list_tag*) const’ is private within this context
+  156 |         Logger::instance().write(LogLevel::Info, fmt, args);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:110:6: note: declared private here
+  110 | void Logger::write(LogLevel lvl, const char* fmt, std::va_list args) const {
+      |      ^~~~~~
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp: In function ‘void keva::log::warn(const char*, ...)’:
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:164:33: error: ‘void keva::Logger::write(keva::LogLevel, const char*, __va_list_tag*) const’ is private within this context
+  164 |         Logger::instance().write(LogLevel::Warn, fmt, args);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:110:6: note: declared private here
+  110 | void Logger::write(LogLevel lvl, const char* fmt, std::va_list args) const {
+      |      ^~~~~~
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp: In function ‘void keva::log::error(const char*, ...)’:
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:172:29: error: ‘void keva::Logger::write(keva::LogLevel, const char*, __va_list_tag*) const’ is private within this context
+  172 |     Logger::instance().write(LogLevel::Error, fmt, args);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/common/logger.cpp:110:6: note: declared private here
+  110 | void Logger::write(LogLevel lvl, const char* fmt, std::va_list args) const {
+      |      ^~~~~~
+[2/129] Building CXX object src/CMakeFiles/keva_core.dir/net/socket.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/net/socket.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/net/socket.cpp.o -MF src/CMakeFiles/keva_core.dir/net/socket.cpp.o.d -o src/CMakeFiles/keva_core.dir/net/socket.cpp.o -c /mnt/c/PROJECTS/Keva/src/net/socket.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/src/net/socket.cpp:21:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+[3/129] Building CXX object src/CMakeFiles/keva_core.dir/protocol/resp_parser.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/protocol/resp_parser.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/protocol/resp_parser.cpp.o -MF src/CMakeFiles/keva_core.dir/protocol/resp_parser.cpp.o.d -o src/CMakeFiles/keva_core.dir/protocol/resp_parser.cpp.o -c /mnt/c/PROJECTS/Keva/src/protocol/resp_parser.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/protocol/resp_parser.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/src/protocol/resp_parser.cpp:32:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+In file included from /mnt/c/PROJECTS/Keva/include/keva/protocol/resp_parser.hpp:34:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+/mnt/c/PROJECTS/Keva/src/protocol/resp_parser.cpp: In member function ‘keva::protocol::ParseResult keva::protocol::RespParser::parse_simple(std::string_view, keva::protocol::RespValue&, keva::usize&)’:
+/mnt/c/PROJECTS/Keva/src/protocol/resp_parser.cpp:89:26: error: invalid use of non-static data member ‘keva::protocol::RespValue::integer’
+   89 |         out = RespValue::integer(value);
+      |                          ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: declared here
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/src/protocol/resp_parser.cpp: In member function ‘keva::protocol::ParseResult keva::protocol::RespParser::parse_array(std::string_view, keva::protocol::RespValue&, keva::usize&)’:
+/mnt/c/PROJECTS/Keva/src/protocol/resp_parser.cpp:178:22: error: invalid use of non-static data member ‘keva::protocol::RespValue::array’
+  178 |     out = RespValue::array(std::move(elements));
+      |                      ^~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: declared here
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+[4/129] Building CXX object src/CMakeFiles/keva_core.dir/protocol/resp_encoder.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/protocol/resp_encoder.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/protocol/resp_encoder.cpp.o -MF src/CMakeFiles/keva_core.dir/protocol/resp_encoder.cpp.o.d -o src/CMakeFiles/keva_core.dir/protocol/resp_encoder.cpp.o -c /mnt/c/PROJECTS/Keva/src/protocol/resp_encoder.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/net/connection.hpp:31,
+                 from /mnt/c/PROJECTS/Keva/include/keva/protocol/resp_encoder.hpp:29,
+                 from /mnt/c/PROJECTS/Keva/src/protocol/resp_encoder.cpp:17:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+In file included from /mnt/c/PROJECTS/Keva/include/keva/protocol/resp_encoder.hpp:30:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp: At global scope:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+[5/129] Building CXX object src/CMakeFiles/keva_core.dir/net/connection.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/net/connection.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/net/connection.cpp.o -MF src/CMakeFiles/keva_core.dir/net/connection.cpp.o.d -o src/CMakeFiles/keva_core.dir/net/connection.cpp.o -c /mnt/c/PROJECTS/Keva/src/net/connection.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/net/connection.hpp:31,
+                 from /mnt/c/PROJECTS/Keva/src/net/connection.cpp:30:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+[6/129] Building CXX object src/CMakeFiles/keva_core.dir/persistence/rdb_load.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/persistence/rdb_load.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/persistence/rdb_load.cpp.o -MF src/CMakeFiles/keva_core.dir/persistence/rdb_load.cpp.o.d -o src/CMakeFiles/keva_core.dir/persistence/rdb_load.cpp.o -c /mnt/c/PROJECTS/Keva/src/persistence/rdb_load.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/core/db.hpp:37,
+                 from /mnt/c/PROJECTS/Keva/include/keva/persistence/rdb_load.hpp:7,
+                 from /mnt/c/PROJECTS/Keva/src/persistence/rdb_load.cpp:18:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+[7/129] Building CXX object src/CMakeFiles/keva_core.dir/net/tcp_server.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/net/tcp_server.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/net/tcp_server.cpp.o -MF src/CMakeFiles/keva_core.dir/net/tcp_server.cpp.o.d -o src/CMakeFiles/keva_core.dir/net/tcp_server.cpp.o -c /mnt/c/PROJECTS/Keva/src/net/tcp_server.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/net/tcp_server.hpp:31,
+                 from /mnt/c/PROJECTS/Keva/src/net/tcp_server.cpp:32:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+[8/129] Building CXX object src/CMakeFiles/keva_core.dir/core/server_context.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/core/server_context.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/core/server_context.cpp.o -MF src/CMakeFiles/keva_core.dir/core/server_context.cpp.o.d -o src/CMakeFiles/keva_core.dir/core/server_context.cpp.o -c /mnt/c/PROJECTS/Keva/src/core/server_context.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/core/db.hpp:37,
+                 from /mnt/c/PROJECTS/Keva/include/keva/core/server_context.hpp:27,
+                 from /mnt/c/PROJECTS/Keva/src/core/server_context.cpp:19:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+[9/129] Building CXX object src/CMakeFiles/keva_core.dir/command/handlers/key_cmd.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/command/handlers/key_cmd.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/command/handlers/key_cmd.cpp.o -MF src/CMakeFiles/keva_core.dir/command/handlers/key_cmd.cpp.o.d -o src/CMakeFiles/keva_core.dir/command/handlers/key_cmd.cpp.o -c /mnt/c/PROJECTS/Keva/src/command/handlers/key_cmd.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/command/handlers/key_cmd.hpp:6,
+                 from /mnt/c/PROJECTS/Keva/src/command/handlers/key_cmd.cpp:18:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/net/connection.hpp:31,
+                 from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:34:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+[10/129] Building CXX object src/CMakeFiles/keva_core.dir/command/handlers/string_cmd.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/command/handlers/string_cmd.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/command/handlers/string_cmd.cpp.o -MF src/CMakeFiles/keva_core.dir/command/handlers/string_cmd.cpp.o.d -o src/CMakeFiles/keva_core.dir/command/handlers/string_cmd.cpp.o -c /mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/command/handlers/string_cmd.hpp:29,
+                 from /mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:29:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/net/connection.hpp:31,
+                 from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:34:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: At global scope:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:45:13: error: using-declaration may not name namespace ‘keva::core::lru_clock’
+   45 | using core::lru_clock;
+      |             ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_set(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:123:48: error: ‘lru_clock’ has not been declared
+  123 |     auto* obj = KevaObject::create_string(val, lru_clock::current());
+      |                                                ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_getset(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:188:52: error: ‘lru_clock’ has not been declared
+  188 |     auto* new_obj = KevaObject::create_string(val, lru_clock::current());
+      |                                                    ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_mset(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:202:62: error: ‘lru_clock’ has not been declared
+  202 |         auto* obj = KevaObject::create_string(args[i+1].str, lru_clock::current());
+      |                                                              ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_append(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:246:56: error: ‘lru_clock’ has not been declared
+  246 |         auto* new_obj = KevaObject::create_string(val, lru_clock::current());
+      |                                                        ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:264:56: error: ‘lru_clock’ has not been declared
+  264 |     auto* new_obj = KevaObject::create_string(current, lru_clock::current());
+      |                                                        ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_incr(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:324:65: error: ‘lru_clock’ has not been declared
+  324 |     auto* new_obj = KevaObject::create_string_from_int(new_val, lru_clock::current());
+      |                                                                 ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_incrby(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:357:65: error: ‘lru_clock’ has not been declared
+  357 |     ctx.db.set(key, KevaObject::create_string_from_int(new_val, lru_clock::current()));
+      |                                                                 ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_decr(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:377:65: error: ‘lru_clock’ has not been declared
+  377 |     ctx.db.set(key, KevaObject::create_string_from_int(new_val, lru_clock::current()));
+      |                                                                 ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_decrby(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:402:65: error: ‘lru_clock’ has not been declared
+  402 |     ctx.db.set(key, KevaObject::create_string_from_int(new_val, lru_clock::current()));
+      |                                                                 ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_setex(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:421:48: error: ‘lru_clock’ has not been declared
+  421 |     auto* obj = KevaObject::create_string(val, lru_clock::current());
+      |                                                ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_psetex(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:440:65: error: ‘lru_clock’ has not been declared
+  440 |     auto* obj = KevaObject::create_string(ctx.cmd.array[3].str, lru_clock::current());
+      |                                                                 ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: In function ‘void keva::command::handlers::handle_setnx(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:458:48: error: ‘lru_clock’ has not been declared
+  458 |     auto* obj = KevaObject::create_string(val, lru_clock::current());
+      |                                                ^~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp: At global scope:
+/mnt/c/PROJECTS/Keva/src/command/handlers/string_cmd.cpp:70:20: warning: ‘std::string keva::command::handlers::get_string_value(const keva::core::KevaObject*, char*)’ defined but not used [-Wunused-function]
+   70 | static std::string get_string_value(const KevaObject* obj, char int_buf[32]) {
+      |                    ^~~~~~~~~~~~~~~~
+[11/129] Building CXX object src/CMakeFiles/keva_core.dir/command/handlers/server_cmd.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/command/handlers/server_cmd.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/command/handlers/server_cmd.cpp.o -MF src/CMakeFiles/keva_core.dir/command/handlers/server_cmd.cpp.o.d -o src/CMakeFiles/keva_core.dir/command/handlers/server_cmd.cpp.o -c /mnt/c/PROJECTS/Keva/src/command/handlers/server_cmd.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/command/handlers/server_cmd.hpp:6,
+                 from /mnt/c/PROJECTS/Keva/src/command/handlers/server_cmd.cpp:24:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/net/connection.hpp:31,
+                 from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:34:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+/mnt/c/PROJECTS/Keva/src/command/handlers/server_cmd.cpp: In function ‘void keva::command::handlers::handle_select(keva::command::CommandContext&)’:
+/mnt/c/PROJECTS/Keva/src/command/handlers/server_cmd.cpp:178:29: error: ‘from_chars’ is not a member of ‘std’
+  178 |     if (auto [p, ec] = std::from_chars(ctx.cmd.array[1].str.data(),
+      |                             ^~~~~~~~~~
+[12/129] Building CXX object src/CMakeFiles/keva_core.dir/persistence/rdb_save.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/persistence/rdb_save.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/persistence/rdb_save.cpp.o -MF src/CMakeFiles/keva_core.dir/persistence/rdb_save.cpp.o.d -o src/CMakeFiles/keva_core.dir/persistence/rdb_save.cpp.o -c /mnt/c/PROJECTS/Keva/src/persistence/rdb_save.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/core/db.hpp:37,
+                 from /mnt/c/PROJECTS/Keva/include/keva/persistence/rdb_save.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/src/persistence/rdb_save.cpp:40:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+/mnt/c/PROJECTS/Keva/src/persistence/rdb_save.cpp: In lambda function:
+/mnt/c/PROJECTS/Keva/src/persistence/rdb_save.cpp:194:35: error: ‘to_chars’ is not a member of ‘std’
+  194 |             auto [end, ec] = std::to_chars(buf, buf + sizeof(buf), val);
+      |                                   ^~~~~~~~
+/mnt/c/PROJECTS/Keva/src/persistence/rdb_save.cpp:195:88: error: no matching function for call to ‘std::basic_string_view<char>::basic_string_view(<brace-enclosed initializer list>)’
+  195 |             result = w.write_string(std::string_view{buf, static_cast<usize>(end - buf)});
+      |                                                                                        ^
+In file included from /usr/include/c++/13/bits/basic_string.h:47,
+                 from /usr/include/c++/13/string:54,
+                 from /mnt/c/PROJECTS/Keva/include/keva/common/types.hpp:21,
+                 from /mnt/c/PROJECTS/Keva/include/keva/core/dict.hpp:42,
+                 from /mnt/c/PROJECTS/Keva/include/keva/core/db.hpp:34:
+/usr/include/c++/13/string_view:155:9: note: candidate: ‘template<class _It, class _End>  requires (contiguous_iterator<_It>) && (sized_sentinel_for<_End, _It>) && ((same_as<typename std::__detail::__iter_traits_impl<typename std::remove_cvref<_It2>::type, std::indirectly_readable_traits<typename std::remove_cvref<_It2>::type> >::type::value_type, _CharT>) && !(convertible_to<_End, long unsigned int>)) constexpr std::basic_string_view<_CharT, _Traits>::basic_string_view(_It, _End) [with _End = _It; _CharT = char; _Traits = std::char_traits<char>]’
+  155 |         basic_string_view(_It __first, _End __last)
+      |         ^~~~~~~~~~~~~~~~~
+/usr/include/c++/13/string_view:155:9: note:   template argument deduction/substitution failed:
+/usr/include/c++/13/string_view:146:7: note: candidate: ‘constexpr std::basic_string_view<_CharT, _Traits>::basic_string_view(const _CharT*, size_type) [with _CharT = char; _Traits = std::char_traits<char>; size_type = long unsigned int]’
+  146 |       basic_string_view(const _CharT* __str, size_type __len) noexcept
+      |       ^~~~~~~~~~~~~~~~~
+/usr/include/c++/13/string_view:146:7: note:   conversion of argument 2 would be ill-formed:
+/usr/include/c++/13/string_view:140:7: note: candidate: ‘constexpr std::basic_string_view<_CharT, _Traits>::basic_string_view(const _CharT*) [with _CharT = char; _Traits = std::char_traits<char>]’
+  140 |       basic_string_view(const _CharT* __str) noexcept
+      |       ^~~~~~~~~~~~~~~~~
+/usr/include/c++/13/string_view:140:7: note:   candidate expects 1 argument, 2 provided
+/usr/include/c++/13/string_view:136:17: note: candidate: ‘constexpr std::basic_string_view<_CharT, _Traits>::basic_string_view(const std::basic_string_view<_CharT, _Traits>&) [with _CharT = char; _Traits = std::char_traits<char>]’
+  136 |       constexpr basic_string_view(const basic_string_view&) noexcept = default;
+      |                 ^~~~~~~~~~~~~~~~~
+/usr/include/c++/13/string_view:136:17: note:   candidate expects 1 argument, 2 provided
+/usr/include/c++/13/string_view:132:7: note: candidate: ‘constexpr std::basic_string_view<_CharT, _Traits>::basic_string_view() [with _CharT = char; _Traits = std::char_traits<char>]’
+  132 |       basic_string_view() noexcept
+      |       ^~~~~~~~~~~~~~~~~
+/usr/include/c++/13/string_view:132:7: note:   candidate expects 0 arguments, 2 provided
+[13/129] Building CXX object src/CMakeFiles/keva_core.dir/command/command.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/command/command.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/command/command.cpp.o -MF src/CMakeFiles/keva_core.dir/command/command.cpp.o.d -o src/CMakeFiles/keva_core.dir/command/command.cpp.o -c /mnt/c/PROJECTS/Keva/src/command/command.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/src/command/command.cpp:26:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/socket.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/include/keva/net/connection.hpp:31,
+                 from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:34:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+[14/129] Building CXX object src/CMakeFiles/keva-server.dir/main.cpp.o
+FAILED: src/CMakeFiles/keva-server.dir/main.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva-server.dir/main.cpp.o -MF src/CMakeFiles/keva-server.dir/main.cpp.o.d -o src/CMakeFiles/keva-server.dir/main.cpp.o -c /mnt/c/PROJECTS/Keva/src/main.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/event_loop.hpp:41,
+                 from /mnt/c/PROJECTS/Keva/src/main.cpp:29:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+In file included from /mnt/c/PROJECTS/Keva/include/keva/command/command.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/src/main.cpp:31:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp: At global scope:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+[15/129] Building CXX object src/CMakeFiles/keva_core.dir/core/db.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/core/db.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/core/db.cpp.o -MF src/CMakeFiles/keva_core.dir/core/db.cpp.o.d -o src/CMakeFiles/keva_core.dir/core/db.cpp.o -c /mnt/c/PROJECTS/Keva/src/core/db.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/core/db.hpp:37,
+                 from /mnt/c/PROJECTS/Keva/src/core/db.cpp:26:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+/mnt/c/PROJECTS/Keva/src/core/db.cpp: In member function ‘keva::core::KevaObject* keva::core::KevaDatabase::peek(std::string_view) const’:
+/mnt/c/PROJECTS/Keva/src/core/db.cpp:93:17: error: ‘static_cast’ from type ‘const void*’ to type ‘keva::core::KevaObject*’ casts away qualifiers
+   93 |     auto* obj = static_cast<KevaObject*>(keys_.get(key));
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/mnt/c/PROJECTS/Keva/src/core/db.cpp: In member function ‘void keva::core::KevaDatabase::flush()’:
+/mnt/c/PROJECTS/Keva/src/core/db.cpp:231:89: error: use of deleted function ‘keva::core::Dict& keva::core::Dict::operator=(const keva::core::Dict&)’
+  231 |     keys_   = Dict{[](void* ptr) { KevaObject::destroy(static_cast<KevaObject*>(ptr)); }};
+      |                                                                                         ^
+In file included from /mnt/c/PROJECTS/Keva/include/keva/core/db.hpp:34:
+/mnt/c/PROJECTS/Keva/include/keva/core/dict.hpp:96:11: note: declared here
+   96 |     Dict& operator=(const Dict&) = delete;
+      |           ^~~~~~~~
+/mnt/c/PROJECTS/Keva/src/core/db.cpp:232:68: error: use of deleted function ‘keva::core::Dict& keva::core::Dict::operator=(const keva::core::Dict&)’
+  232 |     expires_= Dict{[](void* ptr) { delete static_cast<i64*>(ptr); }};
+      |                                                                    ^
+/mnt/c/PROJECTS/Keva/include/keva/core/dict.hpp:96:11: note: declared here
+   96 |     Dict& operator=(const Dict&) = delete;
+      |           ^~~~~~~~
+[16/129] Building CXX object src/CMakeFiles/keva_core.dir/net/event_loop.cpp.o
+FAILED: src/CMakeFiles/keva_core.dir/net/event_loop.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT src/CMakeFiles/keva_core.dir/net/event_loop.cpp.o -MF src/CMakeFiles/keva_core.dir/net/event_loop.cpp.o.d -o src/CMakeFiles/keva_core.dir/net/event_loop.cpp.o -c /mnt/c/PROJECTS/Keva/src/net/event_loop.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/net/event_loop.hpp:41,
+                 from /mnt/c/PROJECTS/Keva/src/net/event_loop.cpp:30:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+/mnt/c/PROJECTS/Keva/src/net/event_loop.cpp: In member function ‘keva::Status keva::net::EventLoop::add_readable(int, keva::net::IoCallback)’:
+/mnt/c/PROJECTS/Keva/src/net/event_loop.cpp:101:9: warning: unused variable ‘op’ [-Wunused-variable]
+  101 |     int op = (h.on_readable && h.on_writable) ? EPOLL_CTL_MOD : EPOLL_CTL_ADD;
+      |         ^~
+[18/129] Building CXX object tests/CMakeFiles/keva_test_resp.dir/unit/test_resp.cpp.o
+FAILED: tests/CMakeFiles/keva_test_resp.dir/unit/test_resp.cpp.o
+/usr/bin/c++  -I/mnt/c/PROJECTS/Keva/include -I/mnt/c/PROJECTS/Keva/build/_deps/catch2-src/src/catch2/.. -I/mnt/c/PROJECTS/Keva/build/_deps/catch2-build/generated-includes -g -std=c++20 -Wall -Wextra -Wpedantic -Wshadow -Wno-unused-parameter -O0 -g3 -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -MD -MT tests/CMakeFiles/keva_test_resp.dir/unit/test_resp.cpp.o -MF tests/CMakeFiles/keva_test_resp.dir/unit/test_resp.cpp.o.d -o tests/CMakeFiles/keva_test_resp.dir/unit/test_resp.cpp.o -c /mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp
+In file included from /mnt/c/PROJECTS/Keva/include/keva/protocol/resp_parser.hpp:33,
+                 from /mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp:11:
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:86:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::integer(keva::i64)’ conflicts with a previous declaration
+   86 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:59:9: note: previous declaration ‘keva::i64 keva::protocol::RespValue::integer’
+   59 |     i64 integer = 0;
+      |         ^~~~~~~
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:106:5: error: ‘static keva::protocol::RespValue keva::protocol::RespValue::array(std::vector<keva::protocol::RespValue>)’ conflicts with a previous declaration
+  106 |     }
+      |     ^
+/mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:62:28: note: previous declaration ‘std::vector<keva::protocol::RespValue> keva::protocol::RespValue::array’
+   62 |     std::vector<RespValue> array;
+      |                            ^~~~~
+In file included from /mnt/c/PROJECTS/Keva/include/keva/protocol/resp_parser.hpp:34:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:80:24: error: ‘bool keva::Status::ok() const’ cannot be overloaded with ‘static keva::Status keva::Status::ok()’
+   80 |     [[nodiscard]] bool ok()           const noexcept { return code_ == StatusCode::Ok; }
+      |                        ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:63:19: note: previous declaration ‘static keva::Status keva::Status::ok()’
+   63 |     static Status ok()                              { return Status{}; }
+      |                   ^~
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp: In member function ‘keva::Status::operator bool() const’:
+/mnt/c/PROJECTS/Keva/include/keva/common/status.hpp:88:56: error: cannot convert ‘keva::Status’ to ‘bool’ in return
+   88 |     explicit operator bool() const noexcept { return ok(); }
+      |                                                      ~~^~
+      |                                                        |
+      |                                                        keva::Status
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp: In function ‘keva::protocol::RespValue parse_complete(std::string_view)’:
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp:20:5: error: ‘usize’ was not declared in this scope; did you mean ‘keva::usize’?
+   20 |     usize consumed = 0;
+      |     ^~~~~
+      |     keva::usize
+In file included from /mnt/c/PROJECTS/Keva/include/keva/protocol/resp_types.hpp:29:
+/mnt/c/PROJECTS/Keva/include/keva/common/types.hpp:39:7: note: ‘keva::usize’ declared here
+   39 | using usize = std::size_t;   // Platform pointer-width unsigned (array sizes, offsets)
+      |       ^~~~~
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp:21:46: error: ‘consumed’ was not declared in this scope
+   21 |     ParseResult r = parser.parse(input, out, consumed);
+      |                                              ^~~~~~~~
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp: In function ‘void CATCH2_INTERNAL_TEST_12()’:
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp:67:5: error: ‘usize’ was not declared in this scope; did you mean ‘keva::usize’?
+   67 |     usize consumed = 0;
+      |     ^~~~~
+      |     keva::usize
+/mnt/c/PROJECTS/Keva/include/keva/common/types.hpp:39:7: note: ‘keva::usize’ declared here
+   39 | using usize = std::size_t;   // Platform pointer-width unsigned (array sizes, offsets)
+      |       ^~~~~
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp:69:52: error: ‘consumed’ was not declared in this scope
+   69 |     ParseResult r = parser.parse("$5\r\nhel", out, consumed);
+      |                                                    ^~~~~~~~
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp: In function ‘void CATCH2_INTERNAL_TEST_14()’:
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp:77:5: error: ‘usize’ was not declared in this scope; did you mean ‘keva::usize’?
+   77 |     usize consumed = 0;
+      |     ^~~~~
+      |     keva::usize
+/mnt/c/PROJECTS/Keva/include/keva/common/types.hpp:39:7: note: ‘keva::usize’ declared here
+   39 | using usize = std::size_t;   // Platform pointer-width unsigned (array sizes, offsets)
+      |       ^~~~~
+/mnt/c/PROJECTS/Keva/tests/unit/test_resp.cpp:79:55: error: ‘consumed’ was not declared in this scope
+   79 |     ParseResult r = parser.parse("@invalid\r\n", out, consumed);
+      |                                                       ^~~~~~~~
+ninja: build stopped: subcommand failed.

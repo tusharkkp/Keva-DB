@@ -1,0 +1,38 @@
+# Docker build context exclusions for Keva
+#
+# Purpose:
+#   Prevents the Docker daemon from uploading unnecessary files into the
+#   build context when running 'docker build'. This dramatically reduces
+#   build times by excluding build artifacts, editor metadata, and other
+#   files that are not needed inside the container.
+
+# CMake build directories
+build/
+cmake-build-debug/
+cmake-build-release/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.orig
+
+# Git internals
+.git/
+.gitignore
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Temporary test output files
+*.rdb
+*.aof
+dump.rdb
+appendonly.aof
+
+# Python cache (integration tests)
+__pycache__/
+*.pyc
+*.pyo

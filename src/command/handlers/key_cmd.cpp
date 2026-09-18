@@ -206,7 +206,7 @@ void handle_rename(CommandContext& ctx) {
 
     core::KevaObject* obj = ctx.db.get(key);
     if (!obj) {
-        RespEncoder::error(ctx.conn, "ERR no such key");
+        RespEncoder::error(ctx.conn, "no such key");
         return;
     }
 

@@ -122,7 +122,7 @@ void CommandRegistry::dispatch(net::Connection& conn, core::KevaDatabase& db) {
         const CommandEntry* entry = find(cmd_name);
         if (!entry) {
             RespEncoder::error(conn,
-                std::string("ERR unknown command `") + cmd_name + "`");
+                std::string("unknown command `") + cmd_name + "`");
             core::ServerContext::instance().record_command();
             continue;
         }
@@ -132,7 +132,7 @@ void CommandRegistry::dispatch(net::Connection& conn, core::KevaDatabase& db) {
         if (argc < entry->arity_min ||
             (entry->arity_max != -1 && argc > entry->arity_max)) {
             RespEncoder::error(conn,
-                std::string("ERR wrong number of arguments for '") + cmd_name + "' command");
+                std::string("wrong number of arguments for '") + entry->name + "' command");
             core::ServerContext::instance().record_command();
             continue;
         }

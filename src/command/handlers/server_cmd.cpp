@@ -179,7 +179,7 @@ void handle_select(CommandContext& ctx) {
     if (auto [p, ec] = std::from_chars(ctx.cmd.elements[1].str.data(),
                                         ctx.cmd.elements[1].str.data() + ctx.cmd.elements[1].str.size(),
                                         idx); ec != std::errc{} || idx != 0) {
-        RespEncoder::error(ctx.conn, "ERR DB index is out of range");
+        RespEncoder::error(ctx.conn, "DB index is out of range");
         return;
     }
     RespEncoder::ok(ctx.conn);

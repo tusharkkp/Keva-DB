@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/logo.png" alt="Keva DB Logo" width="280" />
+
 # ⚡ KEVA DB
 
 ### High-Performance, Zero-Dependency In-Memory Key-Value Store Engineered in C++20
@@ -130,7 +132,7 @@ graph TD
 
     subgraph Network["Networking Engine (Reactor)"]
         SOCK["Non-Blocking TCP Sockets (TCP_NODELAY)"]
-        LOOP["EventLoop (Linux epoll_wait)"]
+        EVLOOP["EventLoop (Linux epoll_wait)"]
         CONN["Connection Engine (Read/Write Buffers)"]
         PIPE["POSIX Self-Pipe (SIGINT, SIGTERM, SIGCHLD)"]
     end
@@ -142,7 +144,7 @@ graph TD
 
     subgraph Router["Command Dispatcher"]
         REG["Table-Driven Registry (O(1) Map Lookup)"]
-        ARITY["Arity & Type Verification"]
+        ARITY["Arity and Type Verification"]
     end
 
     subgraph Storage["Core Storage Engine"]
@@ -162,8 +164,8 @@ graph TD
     CLI -->|TCP Port 6379| SOCK
     APPS -->|TCP Port 6379| SOCK
     SOCK --> CONN
-    LOOP -->|Dispatches Events| CONN
-    PIPE -->|Signal Wakeup| LOOP
+    EVLOOP -->|Dispatches Events| CONN
+    PIPE -->|Signal Wakeup| EVLOOP
     CONN --> PARSER
     PARSER -->|Parsed RespValue AST| REG
     REG --> ARITY
@@ -191,28 +193,28 @@ sequenceDiagram
     autonumber
     actor Client as Redis Client / App
     participant Kernel as Linux Kernel (epoll)
-    participant Loop as EventLoop & Connection
+    participant Reactor as EventLoop and Connection
     participant Parser as RESP2 Parser (FSM)
     participant Dispatcher as Command Router
-    participant Engine as Storage Engine (Dict & Object)
+    participant Engine as Storage Engine (Dict/Object)
     participant Encoder as RESP2 Encoder
 
-    Client->>Kernel: Send "*5\r\n$3\r\nSET\r\n$6\r\nuser:1\r\n$5\r\nAlice\r\n$2\r\nEX\r\n$2\r\n60\r\n"
-    Kernel-->>Loop: epoll_wait() returns EPOLLIN
-    Loop->>Loop: fill_read_buffer() appends bytes to read_buf_
-    Loop->>Parser: parse(read_view)
-    Parser-->>Loop: Returns RespValue Array & consumed byte count
-    Loop->>Loop: consume(offset) advances cursor
-    Loop->>Dispatcher: dispatch(CommandContext)
-    Dispatcher->>Dispatcher: Validate command name "SET" and arity (5 in range [3, -1])
-    Dispatcher->>Engine: handle_set(key="user:1", val="Alice", EX=60)
-    Engine->>Engine: KevaObject::create_string("Alice") -> Allocates EMBSTR (<=44B)
-    Engine->>Engine: Dict::set("user:1", obj) -> Inserts & triggers rehash_step(1)
-    Engine->>Engine: Dict::set_expire("user:1", now_ms + 60,000)
+    Client->>Kernel: Send RESP2 Array: SET user:1 Alice EX 60
+    Kernel-->>Reactor: epoll_wait() returns EPOLLIN
+    Reactor->>Reactor: fill_read_buffer() appends bytes
+    Reactor->>Parser: parse(read_view)
+    Parser-->>Reactor: Returns RespValue AST and consumed offset
+    Reactor->>Reactor: consume(offset) advances cursor
+    Reactor->>Dispatcher: dispatch(CommandContext)
+    Dispatcher->>Dispatcher: Validate command SET and arity (5)
+    Dispatcher->>Engine: handle_set(key='user:1', val='Alice', EX=60)
+    Engine->>Engine: KevaObject::create_string('Alice') [EMBSTR <=44B]
+    Engine->>Engine: Dict::set('user:1', obj) and rehash_step(1)
+    Engine->>Engine: Dict::set_expire('user:1', now_ms + 60000)
     Engine->>Encoder: RespEncoder::ok(conn)
-    Encoder->>Loop: Writes "+OK\r\n" directly to write_buf_
-    Loop->>Kernel: flush_write_buffer() -> write(fd)
-    Kernel-->>Client: Receive "+OK\r\n"
+    Encoder->>Reactor: Writes +OK directly to write_buf_
+    Reactor->>Kernel: flush_write_buffer() via write(fd)
+    Kernel-->>Client: Receive +OK reply
 ```
 
 ---
@@ -225,13 +227,13 @@ When `BGSAVE` is executed, Keva leverages Linux's virtual memory subsystem to ge
 graph TD
     subgraph Step1["1. BGSAVE Triggered"]
         P1["Parent Keva Server (PID 1000)"]
-        RAM1[("Physical RAM Pages: [P1] [P2] [P3] [P4]")]
+        RAM1[("Physical RAM Pages: P1, P2, P3, P4")]
         P1 --> RAM1
     end
 
     subgraph Step2["2. Linux fork() Call"]
-        P2["Parent Keva Server (PID 1000)<br>Serves live queries"]
-        C2["Child Process (PID 1001)<br>Dedicated to serialization"]
+        P2["Parent Keva Server (PID 1000)<br/>Serves live queries"]
+        C2["Child Process (PID 1001)<br/>Dedicated to serialization"]
         RAM2[("Shared Physical Pages (Marked Read-Only)")]
         P2 -.->|COW Page Table Pointer| RAM2
         C2 -.->|COW Page Table Pointer| RAM2
@@ -241,10 +243,10 @@ graph TD
     subgraph Step3["3. Client Modifies Page P2"]
         P3["Parent Writes New Key"]
         FAULT["Kernel Page Fault"]
-        NEWPAGE[("New Private Page P2' (Copied)")]
+        NEWPAGE[("New Private Page P2 Copied")]
         P3 --> FAULT --> NEWPAGE
-        C3["Child continues reading original P2<br>Zero corruption, zero locks!"]
-        C3 --> FINISH["Atomic rename('dump.rdb.tmp', 'dump.rdb')<br>_exit(0)"]
+        C3["Child continues reading original P2<br/>Zero corruption, zero locks"]
+        C3 --> FINISH["Atomic rename dump.rdb.tmp to dump.rdb<br/>exit 0"]
     end
 ```
 

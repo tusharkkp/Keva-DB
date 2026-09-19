@@ -731,36 +731,6 @@ INCR: 121,951 requests per second, p50=0.34ms, p99=0.79ms
 
 ---
 
-## 🗺️ Engineering Roadmap
-
-The Keva architecture is engineered for progressive modular expansion:
-
-- [x] **Phase 1: Foundations (Current Baseline)**
-  - [x] Single-threaded Linux `epoll` reactor networking.
-  - [x] Streaming zero-copy RESP2 parser and stack serializer.
-  - [x] Dual-table incremental progressive hash table (`Dict`).
-  - [x] Binary-safe dynamic string buffer (`Buffer`).
-  - [x] 16-byte packed `KevaObject` with `RAW`, `INT`, `EMBSTR` encodings.
-  - [x] Passive (lazy) + Active 10Hz probabilistic key expiration.
-  - [x] Point-in-time persistence via Linux `fork()` Copy-on-Write (`SAVE` / `BGSAVE`).
-  - [x] Jones polynomial CRC-64 snapshot validation.
-  - [x] Automated unit and integration test suites.
-
-- [ ] **Phase 2: High Concurrency & Multi-Threaded I/O (Redis 6.0 Model)**
-  - [ ] Dedicated I/O worker pool for parallel network reading, protocol parsing, and socket writing.
-  - [ ] Lock-free task delegation queues between I/O threads and the main command executor.
-  - [ ] Multi-level SkipList (`zskiplist`) for Sorted Sets (`ZADD`, `ZRANGE`, `ZRANGEBYSCORE`, `ZRANK`).
-  - [ ] Hash Table data type (`HSET`, `HGET`, `HDEL`, `HGETALL`).
-  - [ ] Doubly-linked List type (`LPUSH`, `RPUSH`, `LPOP`, `RPOP`, `LRANGE`).
-
-- [ ] **Phase 3: Real-Time Durability & Clustering**
-  - [ ] Append-Only File (AOF) with configurable `fsync` policies (`always`, `everysec`, `no`).
-  - [ ] Background AOF rewriting (`BGREWRITEAOF`) via `fork()`.
-  - [ ] Master-Replica asynchronous replication stream.
-  - [ ] Redis Sentinel-compatible failover heartbeats.
-
----
-
 ## 🤝 Contributing Guide
 
 We welcome contributions from systems engineers, database enthusiasts, and open-source developers!
@@ -814,8 +784,6 @@ This project is licensed under the terms of the **MIT License**. See the [LICENS
 - 🌐 **GitHub**: [@tusharkkp](https://github.com/tusharkkp)
 - 💼 **LinkedIn**: [Tushar Kaldate](https://www.linkedin.com/in/tushar-kaldate-2b5276262/)
 - 📁 **Repository**: [https://github.com/tusharkkp/Keva-DB](https://github.com/tusharkkp/Keva-DB)
-
-*If Keva inspired you or helped you understand systems programming, database internals, or the Linux kernel, please consider giving the repository a ⭐ on GitHub!*
 
 <div align="center">
   <sub>Built for the love of systems programming and mechanical sympathy.</sub>

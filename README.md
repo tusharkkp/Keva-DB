@@ -2,8 +2,6 @@
 
 <img src="assets/logo.png" alt="Keva DB Logo" width="280" />
 
-# ⚡ KEVA DB
-
 ### High-Performance, Zero-Dependency In-Memory Key-Value Store Engineered in C++20
 
 *A Redis-compatible in-memory database built from scratch to achieve predictable sub-millisecond latency, zero stop-the-world pauses, and mechanical sympathy with the Linux kernel.*
